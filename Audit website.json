@@ -6,7 +6,9 @@
         "httpMethod": "POST",
         "path": "audit",
         "responseMode": "responseNode",
-        "options": {}
+        "options": {
+          "allowedOrigins": "*"
+        }
       },
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
@@ -106,7 +108,7 @@
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.2,
       "position": [
-        1008,
+        944,
         0
       ],
       "id": "ec851c47-4b91-4483-bb06-d0fbcecfe5a0",
@@ -143,7 +145,7 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        1184,
+        1120,
         0
       ],
       "id": "c9694708-32d9-43ae-973b-52702c1f7ab1",
@@ -224,7 +226,7 @@
     "executionOrder": "v1",
     "availableInMCP": false
   },
-  "versionId": "05abf065-e0a3-4e17-a385-ada7196619df",
+  "versionId": "090b3857-bc32-4b7d-bc9b-aba84ebdcc8f",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "5db366a70410a61b4f8e6ea4ab77feed446e26b24b086a741ae9c0e281509b48"
