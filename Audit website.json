@@ -1,0 +1,234 @@
+{
+  "name": "Audit website",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "audit",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        16,
+        0
+      ],
+      "id": "ab49d399-a401-4f3c-8aa7-75e166748940",
+      "name": "Webhook",
+      "webhookId": "4eadd6a5-cd3e-4ca1-9ef1-0757b5c192a1"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.body.url }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        208,
+        0
+      ],
+      "id": "0378ac1f-fd76-4ff8-99d3-78c075386ee4",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "operation": "extractHtmlContent",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "testo_sito",
+              "cssSelector": "body"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "6552605b-6a51-4b57-b7af-6420afb3ffe7",
+      "name": "HTML"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Analizza il contenuto testuale del sito web:  {{ $json.testo_sito }}",
+        "options": {
+          "systemMessage": "Sei l'Agente AI di Gianluigi Mautone, esperto in AI Business Automation & Digital Operations. Il tuo compito è generare un report di consulenza professionale per un potenziale cliente basandoti sull'analisi del testo del suo sito web.\n\nDEVI GENERARE IL REPORT ESCLUSIVAMENTE IN FORMATO HTML (solo il contenuto del body, senza tag <html> o <body>).\n\nREGOLE DI FORMATTAZIONE OBBLIGATORIE:\n1. Usa <h2 style=\"color: #1e293b; border-bottom: 2px solid #6366f1; padding-bottom: 10px;\"> per il titolo principale.\n2. Usa <h3 style=\"color: #4f46e5; margin-top: 25px;\"> per i titoli delle automazioni.\n3. Usa <p style=\"line-height: 1.6; color: #334155; margin-bottom: 15px;\"> per i paragrafi.\n4. Ogni sezione di automazione deve essere separata da una riga <hr style=\"border: 0; border-top: 1px solid #e2e8f0; margin: 20px 0;\">.\n5. Usa <strong> per evidenziare termini chiave e benefici.\n\nSTRUTTURA DEL REPORT:\n\n1. SALUTO INIZIALE: Inizia con un saluto professionale (es. \"Gentile Team di [Nome Azienda/Sito],\" o \"Buongiorno,\"), ringraziando per l'interesse e introducendo brevemente l'analisi effettuata come esperto di automazione.\n\n2. ANALISI BREVE: Scrivi 2 righe su cosa hai notato nel sito (es. potenziale non sfruttato, processi manuali evidenti).\n\n3. PROPOSTE DI AUTOMAZIONE (3 PUNTI):\n   - Per ogni punto, indica Titolo, Descrizione dettagliata e Benefici chiari.\n   - Assicurati che le proposte siano coerenti con il settore del cliente (es. se è un hotel, parla di prenotazioni; se è un'immobiliare, di gestione lead).\n\n4. CONCLUSIONI: Chiudi il report spiegando come queste automazioni possano trasformare l'efficienza aziendale e invita a una breve chiamata conoscitiva per approfondire.\n\n5. FIRMA PROFESSIONALE:\n   <p style=\"margin-top: 30px;\">\n   Un cordiale saluto,<br><br>\n   <strong>Gianluigi Mautone</strong><br>\n   <em>AI Automation & Digital Operations Specialist</em><br>\n   Email: gianluigimautone@gmail.com | Tel: +39 3315490090\n   </p>"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        624,
+        0
+      ],
+      "id": "c68bec9a-f8df-4800-8ee1-910e8c6e2818",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        624,
+        176
+      ],
+      "id": "e95ffb63-299a-4281-9544-b7869a743b36",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "CRReECknxukGGQpD",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Webhook').item.json.body.email }}",
+        "subject": "=Report AI: Strategie di Automazione di Gianluigi Mautone",
+        "message": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1008,
+        0
+      ],
+      "id": "ec851c47-4b91-4483-bb06-d0fbcecfe5a0",
+      "name": "Send a message",
+      "webhookId": "1dbdb845-c54d-4b3a-ae3a-ff5f2b76216d",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "x0WRRkZZ2oToyKnl",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Methods",
+                "value": "POST, GET, OPTIONS"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "Content-Type"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1184,
+        0
+      ],
+      "id": "c9694708-32d9-43ae-973b-52702c1f7ab1",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "05abf065-e0a3-4e17-a385-ada7196619df",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5db366a70410a61b4f8e6ea4ab77feed446e26b24b086a741ae9c0e281509b48"
+  },
+  "id": "323k-GdyPTw-ZWrtTR1Rv",
+  "tags": []
+}
