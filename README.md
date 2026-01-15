@@ -58,4 +58,4 @@ AI Automation & Digital Operations Specialist
 
 📍 Vallo della Lucania, (SA) 
 
-📧 gianluigimautone@gmail.com 
+📧 gianluigimautone.business@gmail.com 
